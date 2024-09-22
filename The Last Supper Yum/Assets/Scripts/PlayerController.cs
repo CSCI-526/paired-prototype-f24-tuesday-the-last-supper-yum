@@ -1,67 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;  
+using UnityEngine.UI;            
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;       
-    public LayerMask groundLayer;      
+    public float moveSpeed = 5f;      
+    public float fallThreshold = -10f;  
+    public GameObject restartButton;   
+    public GameObject inGameRestartButton;
+    public LayerMask groundLayer;     
 
     private Rigidbody2D rb;           
-    private Vector3 initialScale;      
+    private Vector3 initialScale;     
     private bool isGrounded;           
 
     void Start()
     {
-
         rb = GetComponent<Rigidbody2D>();
 
-
         initialScale = transform.localScale;
+
+        restartButton.SetActive(false);
     }
 
     void Update()
     {
-    
+       
         float move = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         transform.Translate(move, 0, 0);
 
-     
-        CheckGrounded();
+        if (transform.position.y < fallThreshold)
+        {
+            PlayerDies();
+        }
     }
 
-    void CheckGrounded()
+    void PlayerDies()
     {
-      
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, groundLayer);
 
-        if (isGrounded)
-        {
-        
-            rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, rb.velocity.y);
-        }
-        else
-        {
-            // Handle logic if the player is not grounded
-        }
+        restartButton.SetActive(true);
+
+
+        rb.velocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Static;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       
         if (collision.gameObject.CompareTag("Enemy"))
         {
-         
             GrowPlayer();
-
-           
             Destroy(collision.gameObject);
         }
     }
 
     void GrowPlayer()
     {
-       
-        transform.localScale += new Vector3(0.2f, 0.2f, 0); 
+        transform.localScale += new Vector3(0.2f, 0.2f, 0);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
