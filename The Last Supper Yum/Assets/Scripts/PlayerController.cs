@@ -37,9 +37,7 @@ public class PlayerController : MonoBehaviour
 
     void PlayerDies()
     {
-
         restartButton.SetActive(true);
-
 
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
