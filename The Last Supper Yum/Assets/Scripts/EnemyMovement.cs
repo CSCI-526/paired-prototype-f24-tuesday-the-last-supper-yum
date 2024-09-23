@@ -14,7 +14,6 @@ public class EnemyMovement : MonoBehaviour
 
     void Start()
     {
-        
         UpdateNumberText();
     }
 
@@ -39,7 +38,8 @@ public class EnemyMovement : MonoBehaviour
         }
 
        
-        enemyNumber += 5; UpdateNumberText();
+        enemyNumber += 5; 
+        UpdateNumberText();
     }
 
     void UpdateNumberText()
