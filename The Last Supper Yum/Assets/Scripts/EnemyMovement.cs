@@ -6,16 +6,17 @@ public class EnemyMovement : MonoBehaviour
 {
     public float speed = 2.0f;          
     public Transform pointA;            
-    public Transform pointB;           
+    public Transform pointB;
+    public float size = 0.1f;
 
     private bool movingRight = true;    
-    public TextMesh numberText;        
+    //public TextMesh numberText;        
     private int enemyNumber = 5;       
 
     void Start()
     {
         
-        UpdateNumberText();
+        //UpdateNumberText();
     }
 
     void Update()
@@ -39,11 +40,11 @@ public class EnemyMovement : MonoBehaviour
         }
 
        
-        enemyNumber += 5; UpdateNumberText();
+        enemyNumber += 5; //UpdateNumberText();
     }
 
-    void UpdateNumberText()
+    /*void UpdateNumberText()
     {
         numberText.text = enemyNumber.ToString();
-    }
+    }*/
 }

@@ -4,19 +4,21 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 50f;      
+    public float moveSpeed = 100f;      
     public float fallThreshold = -10f;  
     public GameObject restartButton;   
     public GameObject inGameRestartButton;
-    public LayerMask groundLayer;     
+    public LayerMask groundLayer;
+    public Animator playerAnims;
 
     private Rigidbody2D rb;           
     private Vector3 initialScale;     
-    private bool isGrounded;
+    private bool isGrounded = true;
 
     public bool inverse = false;
-    public float size = 5f;
+    public float size = 1.2f;
     public string resizeDirection = "";
+    public float speedMult = 5f;
     private float stretchedAmount = 0f;
 
     enum MoveMode
@@ -75,22 +77,25 @@ public class PlayerController : MonoBehaviour
         // vertical movement
         else if (Input.GetAxis("Vertical") == 1) 
         {
-            if (moveMode == MoveMode.idle)
+            if (moveMode == MoveMode.idle && isGrounded)
             {
                 resizeDirection = "y";
                 inverse = false;
                 moveMode = MoveMode.stretch;
             }
         }
-        /*else if (Input.GetAxis("Vertical") == -1)
+        else if (Input.GetAxis("Vertical") == -1)
         {
-            resizeDirection = "y";
-            inverse = true;
-            moveMode = MoveMode.stretch;
-        }*/
+            if (moveMode == MoveMode.idle)
+            {
+                resizeDirection = "y";
+                inverse = true;
+                moveMode = MoveMode.stretch;
+            }
+        }
 
         // idle
-        if (Input.GetAxis("Horizontal") == 0 && (Input.GetAxis("Vertical") == 0 || Input.GetAxis("Vertical") == -1))
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
         {
             //resizeAmount = 0;
             //resizeDirection = "";
@@ -103,7 +108,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (moveMode == MoveMode.shrink)
         {
-            Shrink(resizeAmount * 2, resizeDirection);
+            Shrink(resizeAmount * speedMult, resizeDirection);
         }
 
         // player dies
@@ -120,7 +125,6 @@ public class PlayerController : MonoBehaviour
         {
             if (direction == "x" && inverse == false)
             {
-                Debug.Log("HELLO");
                 transform.position = new Vector2(transform.position.x + (amount / 2), transform.position.y);
                 transform.localScale = new Vector2(transform.localScale.x + amount, transform.localScale.y);
             }
@@ -137,11 +141,12 @@ public class PlayerController : MonoBehaviour
                 transform.localScale = new Vector2(transform.localScale.x + amount, transform.localScale.y);
             }
 
-            /*else if (direction == "y" && inverse == true)
+            if (direction == "y" && inverse == true)
             {
                 transform.position = new Vector2(transform.position.x, transform.position.y - (amount / 2));
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y + amount);
-            }*/
+            }
+
             stretchedAmount += amount;
         }
         else // stretch limit
@@ -185,32 +190,64 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void PlayerDies()
+    public void PlayerDies()
     {
-
-        restartButton.SetActive(true);
-
-
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
+        playerAnims.Play("Dead");
+    }
+
+    public void PlayerDestroyed()
+    {
+        restartButton.SetActive(true);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("Trigger Entered");
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            GrowPlayer();
-            Destroy(collision.gameObject);
+            float enemySize = collision.gameObject.GetComponent<EnemyMovement>().size;
+            if (size > enemySize)
+            {
+                Debug.Log(" Collision " + collision.gameObject.name);
+                GrowPlayer(enemySize / size);
+                size += enemySize;
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                Debug.Log("Die ");
+                PlayerDies();
+            }
         }
     }
 
-    void GrowPlayer()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        transform.localScale += new Vector3(0.2f, 0.2f, 0);
+        if (collision.collider.gameObject.CompareTag("Ground")) // on ground
+        {
+            isGrounded = true;
+        }
+        else if (moveMode == MoveMode.stretch) // hit something
+        {
+            moveMode = MoveMode.idle;
+        }
     }
 
-    public void RestartGame()
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (collision.collider.gameObject.CompareTag("Ground")) // on ground
+        {
+            isGrounded = false;
+        }
+    }
+
+    void GrowPlayer(float sizeIncrease)
+    {
+        playerAnims.Play("GainMass");
+        transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
+        moveSpeed -= sizeIncrease;
     }
 }
