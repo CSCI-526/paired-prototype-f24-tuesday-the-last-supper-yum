@@ -12,7 +12,11 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;           
     private Vector3 initialScale;     
-    private bool isGrounded;           
+    private bool isGrounded;
+
+    public bool inverse = false;
+    public float resizeAmount = 5f;
+    public string resizeDirection = "";
 
     void Start()
     {
@@ -23,7 +27,7 @@ public class PlayerController : MonoBehaviour
         restartButton.SetActive(false);
     }
 
-    void Update()
+    void FixedUpdate()
     {
        
         float move = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
@@ -32,6 +36,66 @@ public class PlayerController : MonoBehaviour
         if (transform.position.y < fallThreshold)
         {
             PlayerDies();
+        }
+    }
+
+    /*void FixedUpdate()
+    {
+        // horizontal movement
+        if (Input.GetAxis("Horizontal") == 1)
+        {
+            
+        }
+        else if (Input.GetAxis("Horizontal") == -1)
+        {
+        }
+
+        // vertical movement
+        if (Input.GetAxis("Vertical") == 1) 
+        { 
+        }
+        else if (Input.GetAxis("Vertical") == -1)
+        {
+
+        }
+
+        // idle
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+        {
+
+        }
+
+        resize(resizeAmount, resizeDirection);
+
+        // player dies
+        if (transform.position.y < fallThreshold)
+        {
+            PlayerDies();
+        }
+    }*/
+
+    void resize(float amount, string direction)
+    {
+        if (direction == "x" && inverse == false)
+        {
+            transform.position = new Vector3(transform.position.x + (amount / 2), transform.position.y, transform.position.z);
+            transform.localScale = new Vector3(transform.localScale.x + amount, transform.localScale.y, transform.localScale.z);
+        }
+        else if (direction == "y" && inverse == false)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + (amount / 2), transform.position.z);
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y + amount, transform.localScale.z);
+        }
+
+        if (direction == "x" && inverse == true)
+        {
+            transform.position = new Vector3(transform.position.x - (amount / 2), transform.position.y, transform.position.z);
+            transform.localScale = new Vector3(transform.localScale.x + amount, transform.localScale.y, transform.localScale.z);
+        }
+        else if (direction == "y" && inverse == true)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y - (amount / 2), transform.position.z);
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y + amount, transform.localScale.z);
         }
     }
 
