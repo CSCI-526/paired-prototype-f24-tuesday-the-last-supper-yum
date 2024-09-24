@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;           
     private Vector3 initialScale;     
-    private bool isGrounded = true;
+    public bool isGrounded = true;
+    private bool isHigh = false;
+    public string platform = "Gound";
 
     public bool inverse = false;
     public float size = 1.2f;
@@ -86,12 +88,15 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetAxis("Vertical") == -1)
         {
-            if (moveMode == MoveMode.idle)
-            {
-                resizeDirection = "y";
-                inverse = true;
-                moveMode = MoveMode.stretch;
+            if(!isGrounded){
+                if (moveMode == MoveMode.idle)
+                {
+                    resizeDirection = "y";
+                    inverse = true;
+                    moveMode = MoveMode.stretch;
+                }
             }
+            
         }
 
         // idle
@@ -108,7 +113,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (moveMode == MoveMode.shrink)
         {
-            Shrink(resizeAmount * speedMult, resizeDirection);
+            Shrink(resizeAmount, resizeDirection);
         }
 
         // player dies
@@ -205,7 +210,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Trigger Entered");
+        // Debug.Log("Trigger Entered");
         if (collision.gameObject.CompareTag("Enemy"))
         {
             float enemySize = collision.gameObject.GetComponent<EnemyMovement>().size;
@@ -221,32 +226,60 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Die ");
                 PlayerDies();
             }
+        } else if (collision.gameObject.CompareTag("Ground")){
+            Debug.Log("hit floor");
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.CompareTag("Ground")) // on ground
+        Debug.Log("current platform is: " + platform);
+        string newPlat = collision.collider.gameObject.tag;
+        Debug.Log("new platform is: " + newPlat);
+        if (newPlat != platform) // collision
         {
+            Debug.Log("Player lose body mass");
+            platform = newPlat;
+            ShrinkPlayer(0.1f);
+        } 
+        
+        if (collision.collider.gameObject.CompareTag("Ground"))// on ground
+        {
+            Debug.Log("setting is grounded to true");
             isGrounded = true;
         }
         else if (moveMode == MoveMode.stretch) // hit something
         {
-            moveMode = MoveMode.idle;
-        }
+            Debug.Log("move mode becoming idle");
+            moveMode = MoveMode.idle; 
+        } 
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.collider.gameObject.CompareTag("Ground")) // on ground
         {
+            Debug.Log("player is on ground");
             isGrounded = false;
         }
     }
 
+    void ShrinkPlayer(float sizeDecrease)
+    {
+        Debug.Log("decreasing body mass by 0.1");
+        //playerAnims.Play("LoseMass");
+        if(transform.localScale.x - sizeDecrease < 0 || transform.localScale.y - sizeDecrease < 0){
+            transform.localScale = new Vector3(0, 0, 0);
+        } else {
+            transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);
+        }
+        moveSpeed += sizeDecrease;
+        isGrounded = true;
+    }
     void GrowPlayer(float sizeIncrease)
     {
         playerAnims.Play("GainMass");
+        Debug.Log("size increase by: " + sizeIncrease);
         transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
         moveSpeed -= sizeIncrease;
     }
