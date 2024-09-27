@@ -8,14 +8,19 @@ public class PlayerController : MonoBehaviour
     public float fallThreshold = -10f;  
     public GameObject restartButton;   
     public GameObject inGameRestartButton;
-    public LayerMask groundLayer;
+    // public LayerMask groundLayer;
     public Animator playerAnims;
 
     private Rigidbody2D rb;           
     private Vector3 initialScale;     
-    public bool isGrounded = true;
-    private bool isHigh = false;
+    public bool isGrounded = true; 
+    // public bool hasShrunk = false; // flag to prevent repeated shrinking
+
     public string platform = "Gound";
+    public string newPlat = "Ground";
+    public bool highPt = false;
+    public float hight = 0f;
+    public float baseHight = 0f;
 
     public bool inverse = false;
     public float size = 1.2f;
@@ -120,6 +125,13 @@ public class PlayerController : MonoBehaviour
         if (transform.position.y < fallThreshold)
         {
             PlayerDies();
+        }
+
+        if(rb.velocity.y < 0 && !highPt){
+            highPt = true;
+            hight = transform.position.y;
+            Debug.Log("starting height: " + baseHight);
+            Debug.Log("highest height: " + hight);
         }
     }
 
@@ -226,55 +238,60 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Die ");
                 PlayerDies();
             }
-        } else if (collision.gameObject.CompareTag("Ground")){
-            Debug.Log("hit floor");
-        }
+        } 
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("current platform is: " + platform);
-        string newPlat = collision.collider.gameObject.tag;
-        Debug.Log("new platform is: " + newPlat);
-        if (newPlat != platform) // collision
+        if(collision.collider.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("Player lose body mass");
-            platform = newPlat;
-            ShrinkPlayer(0.1f);
-        } 
-        
-        if (collision.collider.gameObject.CompareTag("Ground"))// on ground
-        {
-            Debug.Log("setting is grounded to true");
             isGrounded = true;
+            baseHight = transform.position.y;
+            if(hight - baseHight > 1){
+                ShrinkPlayer(0.1f);
+            }
         }
-        else if (moveMode == MoveMode.stretch) // hit something
-        {
-            Debug.Log("move mode becoming idle");
-            moveMode = MoveMode.idle; 
-        } 
+
+        // // Debug.Log("Before collision the player is on " + platform);
+        // newPlat = collision.collider.gameObject.tag;
+        // // Debug.Log("new platform collided with " + newPlat);
+
+        // if (newPlat != platform && !isGrounded) 
+        // {
+        //     // Shrink only if the platform is new and hasn't shrunk yet
+        //     Debug.Log("Player is on a different platform");
+        //     platform = newPlat;
+        //     ShrinkPlayer(0.1f);
+        //     // hasShrunk = true; // Mark that the player has shrunk so dont die from repeated shrinking
+        // } 
+        // Debug.Log("Setting isGrounded to true");
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.CompareTag("Ground")) // on ground
+        if (collision.collider.gameObject.CompareTag("Ground")) 
         {
-            Debug.Log("player is on ground");
+            Debug.Log("Player left the ground");
             isGrounded = false;
+            highPt = false;
         }
     }
 
     void ShrinkPlayer(float sizeDecrease)
     {
-        Debug.Log("decreasing body mass by 0.1");
-        //playerAnims.Play("LoseMass");
-        if(transform.localScale.x - sizeDecrease < 0 || transform.localScale.y - sizeDecrease < 0){
-            transform.localScale = new Vector3(0, 0, 0);
-        } else {
-            transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);
+        Debug.Log("Decreasing body mass by 0.1");
+        
+        // Ensure the player doesn't shrink below zero
+        if (transform.localScale.x - sizeDecrease <= 0 || transform.localScale.y - sizeDecrease <= 0)
+        {
+            transform.localScale = Vector3.zero;  // Player is fully shrunk
         }
+        else
+        {
+            transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);  // Shrink
+        }
+        
         moveSpeed += sizeDecrease;
-        isGrounded = true;
     }
     void GrowPlayer(float sizeIncrease)
     {
