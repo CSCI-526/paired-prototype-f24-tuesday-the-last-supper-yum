@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour
         initialScale = transform.localScale;
 
         restartButton.SetActive(false);
+        hight = transform.position.y;
+        baseHight = transform.position.y;
     }
 
     /*void FixedUpdate()
@@ -211,7 +213,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
-        playerAnims.Play("Dead");
+        playerAnims.SetTrigger("Dead");
     }
 
     public void PlayerDestroyed()
@@ -288,6 +290,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            playerAnims.SetTrigger("LoseMass");
             transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);  // Shrink
         }
         
@@ -295,7 +298,7 @@ public class PlayerController : MonoBehaviour
     }
     void GrowPlayer(float sizeIncrease)
     {
-        playerAnims.Play("GainMass");
+        playerAnims.SetTrigger("GainMass");
         Debug.Log("size increase by: " + sizeIncrease);
         transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
         moveSpeed -= sizeIncrease;
