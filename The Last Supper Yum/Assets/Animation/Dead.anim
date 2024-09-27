@@ -546,7 +546,7 @@ AnimationClip:
   - time: 0.9166667
     functionName: PlayerDestroyed
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 11500000, guid: 0eb63fbc9501df84cb558870fa74b087, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

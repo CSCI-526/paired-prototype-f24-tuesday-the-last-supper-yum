@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     public string resizeDirection = "";
     public float speedMult = 5f;
     private float stretchedAmount = 0f;
+    private float baseSize = 1f;
+    private bool dead = false;
 
     enum MoveMode
     {
@@ -124,7 +126,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // player dies
-        if (transform.position.y < fallThreshold)
+        if (!dead && transform.position.y < fallThreshold)
         {
             PlayerDies();
         }
@@ -171,6 +173,14 @@ public class PlayerController : MonoBehaviour
         else // stretch limit
         {
             moveMode = MoveMode.shrink;
+            if (direction == "y")
+            {
+                transform.localScale = new Vector2(baseSize, baseSize + size);
+            }
+            else if (direction == "x")
+            {
+                transform.localScale = new Vector2(baseSize + size, baseSize);
+            }
         }
     }
 
@@ -206,20 +216,24 @@ public class PlayerController : MonoBehaviour
         {
             rb.gravityScale = 1;
             moveMode = MoveMode.idle;
+            transform.localScale = new Vector2(baseSize, baseSize);
         }
     }
 
     public void PlayerDies()
     {
+        Debug.Log("PlayerDies called");
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
         playerAnims.SetTrigger("Dead");
+        dead = true;
     }
 
     public void PlayerDestroyed()
     {
         restartButton.SetActive(true);
         Destroy(gameObject);
+        Debug.Log("PlayerDestroyed called");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -301,6 +315,8 @@ public class PlayerController : MonoBehaviour
         playerAnims.SetTrigger("GainMass");
         Debug.Log("size increase by: " + sizeIncrease);
         transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
+        Debug.Log("LOCAL SCALE: " + transform.localScale);
         moveSpeed -= sizeIncrease;
+        baseSize += sizeIncrease;
     }
 }
