@@ -1,19 +1,21 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;  
-using UnityEngine.UI;            
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 100f;      
-    public float fallThreshold = -10f;  
-    public GameObject restartButton;   
+    public float moveSpeed = 100f;
+    public float fallThreshold = -10f;
+    public GameObject restartButton;
     public GameObject inGameRestartButton;
     // public LayerMask groundLayer;
     public Animator playerAnims;
 
-    private Rigidbody2D rb;           
-    private Vector3 initialScale;     
-    public bool isGrounded = true; 
+    private Rigidbody2D rb;
+    private Rigidbody2D objectRigidbody;
+    private Vector3 initialScale;
+    public bool isGrounded = true;
     // public bool hasShrunk = false; // flag to prevent repeated shrinking
 
     public string platform = "Gound";
@@ -68,7 +70,7 @@ public class PlayerController : MonoBehaviour
         // horizontal movement
         if (Input.GetAxis("Horizontal") == 1)
         {
-            if(moveMode == MoveMode.idle)
+            if (moveMode == MoveMode.idle)
             {
                 resizeDirection = "x";
                 inverse = false;
@@ -86,7 +88,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // vertical movement
-        else if (Input.GetAxis("Vertical") == 1) 
+        else if (Input.GetAxis("Vertical") == 1)
         {
             if (moveMode == MoveMode.idle && isGrounded)
             {
@@ -97,7 +99,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetAxis("Vertical") == -1)
         {
-            if(!isGrounded){
+            if (!isGrounded)
+            {
                 if (moveMode == MoveMode.idle)
                 {
                     resizeDirection = "y";
@@ -105,7 +108,7 @@ public class PlayerController : MonoBehaviour
                     moveMode = MoveMode.stretch;
                 }
             }
-            
+
         }
 
         // idle
@@ -131,10 +134,10 @@ public class PlayerController : MonoBehaviour
             PlayerDies();
         }
 
-        if(rb.velocity.y < 0 && !highPt){
+        if (rb.velocity.y < 0 && !highPt)
+        {
             highPt = true;
             hight = transform.position.y;
-            Debug.Log("starting height: " + baseHight);
             Debug.Log("highest height: " + hight);
         }
     }
@@ -254,40 +257,52 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Die ");
                 PlayerDies();
             }
-        } 
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.collider.gameObject.CompareTag("Ground"))
+        if (collision.collider.gameObject.CompareTag("Ground"))
         {
+            //check the name of the platform
+            platform = collision.gameObject.name;
+            Debug.Log("Player has landed on " + platform);
+            if (platform == "BreakingPlatform")
+            {
+                if (size > 5)
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
             isGrounded = true;
             baseHight = transform.position.y;
-            if(hight - baseHight > 1){
-                ShrinkPlayer(0.1f);
+            // Debug.Log("starting height: " + baseHight);
+            // Debug.Log("height difference: " + Math.Abs(hight - baseHight));
+            // Debug.Log("take damge if its greater than: " + (size * 1.5f));
+            if (Math.Abs(hight - baseHight) > (size * 1.5f) && !(inverse == true && resizeDirection == "y"))
+            {
+                ShrinkPlayer(Math.Abs(hight - baseHight) * 0.5f);
+            }
+        } else if (collision.collider.gameObject.CompareTag("Object"))
+        {
+            objectRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
+            if(size > 5){
+                Debug.Log("Player pushing with object");
+                // player is able to push the object
+                objectRigidbody.constraints = RigidbodyConstraints2D.None;
+            } else {
+                Debug.Log("Player is too small to push object");
+                // the object stays in place
+                objectRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             }
         }
-
-        // // Debug.Log("Before collision the player is on " + platform);
-        // newPlat = collision.collider.gameObject.tag;
-        // // Debug.Log("new platform collided with " + newPlat);
-
-        // if (newPlat != platform && !isGrounded) 
-        // {
-        //     // Shrink only if the platform is new and hasn't shrunk yet
-        //     Debug.Log("Player is on a different platform");
-        //     platform = newPlat;
-        //     ShrinkPlayer(0.1f);
-        //     // hasShrunk = true; // Mark that the player has shrunk so dont die from repeated shrinking
-        // } 
-        // Debug.Log("Setting isGrounded to true");
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.CompareTag("Ground")) 
+        if (collision.collider.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("Player left the ground");
+            // Debug.Log("Player left the ground");
             isGrounded = false;
             highPt = false;
         }
@@ -295,20 +310,28 @@ public class PlayerController : MonoBehaviour
 
     void ShrinkPlayer(float sizeDecrease)
     {
-        Debug.Log("Decreasing body mass by 0.1");
-        
+        // Debug.Log("Decreasing body mass by " + sizeDecrease);
         // Ensure the player doesn't shrink below zero
         if (transform.localScale.x - sizeDecrease <= 0 || transform.localScale.y - sizeDecrease <= 0)
         {
-            transform.localScale = Vector3.zero;  // Player is fully shrunk
+            Debug.Log("Died from shrinkage localscale");
+            PlayerDies();
         }
         else
         {
-            playerAnims.SetTrigger("LoseMass");
-            transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);  // Shrink
+            moveSpeed += sizeDecrease;
+            size -= sizeDecrease;
+            if (size <= 0)
+            {
+                Debug.Log("Died from shrinkage");
+                PlayerDies();
+            }
+            else
+            {
+                playerAnims.SetTrigger("LoseMass");
+                transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);  // Shrink
+            }
         }
-        
-        moveSpeed += sizeDecrease;
     }
     void GrowPlayer(float sizeIncrease)
     {
