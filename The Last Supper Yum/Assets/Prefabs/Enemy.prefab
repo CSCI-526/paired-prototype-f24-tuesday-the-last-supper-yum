@@ -174,7 +174,7 @@ MonoBehaviour:
   speed: 2
   pointA: {fileID: 0}
   pointB: {fileID: 0}
-  size: 0.1
+  size: 0.5
 --- !u!1 &5952540333192575700
 GameObject:
   m_ObjectHideFlags: 0
