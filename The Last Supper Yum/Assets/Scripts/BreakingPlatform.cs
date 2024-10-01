@@ -23,7 +23,8 @@ public class BreakingPlatform : MonoBehaviour
         {
             float playerSize = collision.gameObject.GetComponent<PlayerController>().size;
             if(playerSize > platSize){
-                Destroy(gameObject);
+                GameObject platform = gameObject.transform.parent.gameObject;
+                Destroy(platform);
             }
         } 
     }
