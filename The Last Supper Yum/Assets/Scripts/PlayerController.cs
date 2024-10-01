@@ -325,7 +325,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log(collision.collider.gameObject.name);
+            //Debug.Log(collision.collider.gameObject.name);
             if (resizeDirection == "y")
             {
                 moveMode = MoveMode.shrink;
