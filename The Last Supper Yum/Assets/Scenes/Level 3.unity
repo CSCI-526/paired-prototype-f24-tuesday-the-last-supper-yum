@@ -812,11 +812,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5952540333192575700, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: PointA2
+      value: PointA
       objectReference: {fileID: 0}
     - target: {fileID: 6661322584635075019, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: PointB2
+      value: PointB
       objectReference: {fileID: 0}
     - target: {fileID: 8867839340434247449, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -832,7 +832,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy2 (1)
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -903,7 +903,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Name
-      value: NormalPlatform (1)
+      value: NormalPlatform 2
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Layer
@@ -2055,7 +2055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy (3)
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_TagString
@@ -2394,11 +2394,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5952540333192575700, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: PointA2
+      value: PointA
       objectReference: {fileID: 0}
     - target: {fileID: 6661322584635075019, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: PointB2
+      value: PointB
       objectReference: {fileID: 0}
     - target: {fileID: 8867839340434247449, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2410,7 +2410,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy2
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2517,7 +2517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy (5)
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_TagString
@@ -2772,11 +2772,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5952540333192575700, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: PointA2
+      value: PointA
       objectReference: {fileID: 0}
     - target: {fileID: 6661322584635075019, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: PointB2
+      value: PointB
       objectReference: {fileID: 0}
     - target: {fileID: 8867839340434247449, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2792,7 +2792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy2 (2)
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2899,7 +2899,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy (4)
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_TagString
@@ -2997,6 +2997,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 798697038496997322, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
+      propertyPath: m_Size.x
+      value: 0.9724499
+      objectReference: {fileID: 0}
+    - target: {fileID: 798697038496997322, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.013775051
+      objectReference: {fileID: 0}
     - target: {fileID: 2835781600330119637, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_LocalScale.x
       value: 12.216771
@@ -3043,7 +3051,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Name
-      value: NormalPlatform (4)
+      value: NormalPlatform 3
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Layer
@@ -3276,7 +3284,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Name
-      value: NormalPlatform (2)
+      value: NormalPlatform 4
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Layer
@@ -3923,6 +3931,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 798697038496997322, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
+      propertyPath: m_Size.x
+      value: 0.958178
+      objectReference: {fileID: 0}
+    - target: {fileID: 798697038496997322, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.020911008
+      objectReference: {fileID: 0}
     - target: {fileID: 2835781600330119637, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_LocalScale.x
       value: 6.974749
@@ -3969,7 +3985,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Name
-      value: NormalPlatform (3)
+      value: NormalPlatform 1
       objectReference: {fileID: 0}
     - target: {fileID: 5679160502604553499, guid: 50e290ac02198dc4f8d3294e48238474, type: 3}
       propertyPath: m_Layer
@@ -4074,7 +4090,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy (1)
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_TagString
@@ -4209,7 +4225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentLevel: 3
-  goalSize: 4
+  goalSize: 3
   player: {fileID: 1675239433048992611}
 --- !u!4 &2022556823
 Transform:
@@ -4732,9 +4748,9 @@ SceneRoots:
   - {fileID: 1492831911}
   - {fileID: 393839143}
   - {fileID: 149533335608401862}
+  - {fileID: 1849926129}
   - {fileID: 245414931}
   - {fileID: 1352717216}
-  - {fileID: 1849926129}
   - {fileID: 1507004632}
   - {fileID: 2692578988555714173}
   - {fileID: 786089608}
