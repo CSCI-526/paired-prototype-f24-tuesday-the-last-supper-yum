@@ -54,82 +54,85 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        float resizeAmount = moveSpeed * Time.deltaTime;
+        if(!dead){
+            float resizeAmount = moveSpeed * Time.deltaTime;
 
-        // horizontal movement
-        if (Input.GetAxis("Horizontal") == 1)
-        {
-            if (moveMode == MoveMode.idle)
-            {
-                resizeDirection = "x";
-                inverse = false;
-                moveMode = MoveMode.stretch;
-            }
-        }
-        else if (Input.GetAxis("Horizontal") == -1)
-        {
-            if (moveMode == MoveMode.idle)
-            {
-                resizeDirection = "x";
-                inverse = true;
-                moveMode = MoveMode.stretch;
-            }
-        }
-
-        // vertical movement
-        if (Input.GetAxis("Vertical") == 1)
-        {
-            if (moveMode == MoveMode.idle && (isGrounded || !jumped))
-            {
-                resizeDirection = "y";
-                inverse = false;
-                moveMode = MoveMode.stretch;
-                jumped = true;
-            }
-        }
-        else if (Input.GetAxis("Vertical") == -1)
-        {
-            if (!isGrounded)
+            // horizontal movement
+            if (Input.GetAxis("Horizontal") == 1)
             {
                 if (moveMode == MoveMode.idle)
                 {
-                    resizeDirection = "y";
+                    resizeDirection = "x";
+                    inverse = false;
+                    moveMode = MoveMode.stretch;
+                }
+            }
+            else if (Input.GetAxis("Horizontal") == -1)
+            {
+                if (moveMode == MoveMode.idle)
+                {
+                    resizeDirection = "x";
                     inverse = true;
                     moveMode = MoveMode.stretch;
                 }
             }
 
+            // vertical movement
+            if (Input.GetAxis("Vertical") == 1)
+            {
+                if (moveMode == MoveMode.idle && (isGrounded || !jumped))
+                {
+                    resizeDirection = "y";
+                    inverse = false;
+                    moveMode = MoveMode.stretch;
+                    jumped = true;
+                }
+            }
+            else if (Input.GetAxis("Vertical") == -1)
+            {
+                if (!isGrounded)
+                {
+                    if (moveMode == MoveMode.idle)
+                    {
+                        resizeDirection = "y";
+                        inverse = true;
+                        moveMode = MoveMode.stretch;
+                    }
+                }
+
+            }
+
+            // idle
+            if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+            {
+                //resizeAmount = 0;
+                //resizeDirection = "";
+                moveMode = MoveMode.shrink;
+            }
+
+            if (moveMode == MoveMode.stretch)
+            {
+                Stretch(resizeAmount, resizeDirection);
+            }
+            else if (moveMode == MoveMode.shrink)
+            {
+                Shrink(resizeAmount, resizeDirection);
+            }
+
+            // player dies
+            if (!dead && transform.position.y < fallThreshold)
+            {
+                PlayerDies();
+            }
+
+            if (rb.velocity.y < 0 && !highPt)
+            {
+                highPt = true;
+                hight = transform.position.y;
+                Debug.Log("highest height VELOCITY: " + hight);
+            }
         }
 
-        // idle
-        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
-        {
-            //resizeAmount = 0;
-            //resizeDirection = "";
-            moveMode = MoveMode.shrink;
-        }
-
-        if (moveMode == MoveMode.stretch)
-        {
-            Stretch(resizeAmount, resizeDirection);
-        }
-        else if (moveMode == MoveMode.shrink)
-        {
-            Shrink(resizeAmount, resizeDirection);
-        }
-
-        // player dies
-        if (!dead && transform.position.y < fallThreshold)
-        {
-            PlayerDies();
-        }
-
-        if (rb.velocity.y < 0 && !highPt)
-        {
-            highPt = true;
-            hight = transform.position.y;
-            Debug.Log("highest height VELOCITY: " + hight);
-        }
     }
 
     // Source: https://pastebin.com/4VsCvrs7 
@@ -261,11 +264,11 @@ public class PlayerController : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Static;
         playerAnims.SetTrigger("Dead");
         dead = true;
+        restartButton.SetActive(true);
     }
 
     public void PlayerDestroyed()
     {
-        restartButton.SetActive(true);
         Destroy(gameObject);
         Debug.Log("PlayerDestroyed called");
     }
@@ -298,17 +301,17 @@ public class PlayerController : MonoBehaviour
             baseHight = transform.position.y;
             Debug.Log("starting height: " + baseHight);
             Debug.Log("height difference: " + Math.Abs(hight - baseHight));
-            Debug.Log("take damge if its greater than: " + (size * 1.5f));
-            if (Math.Abs(hight - baseHight) > (size * 1.5f) && !(inverse == true && resizeDirection == "y"))
+            Debug.Log("take damge if its greater than: " + (size * 1.9f));
+            if (Math.Abs(hight - baseHight) > (size * 1.9f) && !(inverse == true && resizeDirection == "y"))
             {
-                ShrinkPlayer(Math.Abs(hight - baseHight) * 0.5f);
+                ShrinkPlayer(Math.Abs(hight - baseHight) * (size/Math.Abs(hight - baseHight)) * 0.8f);
             }
             hight = baseHight;
-            Debug.Log("Highest Height: " + hight);
+            Debug.Log("Highest Height set to: " + hight);
         } else if (collision.collider.gameObject.CompareTag("Object"))
         {
             objectRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
-            if(size > 5){
+            if(size > 3){
                 Debug.Log("Player pushing with object");
                 // player is able to push the object
                 objectRigidbody.constraints = RigidbodyConstraints2D.None;
@@ -334,37 +337,43 @@ public class PlayerController : MonoBehaviour
 
     void ShrinkPlayer(float sizeDecrease)
     {
-        Debug.Log("Decreasing body mass by " + sizeDecrease);
-        // Ensure the player doesn't shrink below zero
-        if (transform.localScale.x - sizeDecrease <= 0 || transform.localScale.y - sizeDecrease <= 0)
-        {
-            Debug.Log("Died from shrinkage localscale");
-            PlayerDies();
-        }
-        else
-        {
-            moveSpeed += sizeDecrease;
-            size -= sizeDecrease;
-            if (size <= 0)
+        if(!dead){
+            Debug.Log("Decreasing body mass by " + sizeDecrease);
+            // Ensure the player doesn't shrink below zero
+            if (transform.localScale.x - sizeDecrease <= 0 || transform.localScale.y - sizeDecrease <= 0)
             {
-                Debug.Log("Died from shrinkage");
+                Debug.Log("Died from shrinkage localscale");
                 PlayerDies();
             }
             else
             {
-                playerAnims.SetTrigger("LoseMass");
-                transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);  // Shrink
+                moveSpeed += sizeDecrease;
+                size -= sizeDecrease;
+                stretchSize -= (sizeDecrease * 1.5f);
+                if (size <= 0)
+                {
+                    Debug.Log("Died from shrinkage");
+                    PlayerDies();
+                }
+                else
+                {
+                    playerAnims.SetTrigger("LoseMass");
+                    transform.localScale -= new Vector3(sizeDecrease, sizeDecrease, 0);  // Shrink
+                }
             }
         }
     }
     void GrowPlayer(float sizeIncrease)
     {
-        playerAnims.SetTrigger("GainMass");
-        Debug.Log("size increase by: " + sizeIncrease);
-        transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
-        Debug.Log("LOCAL SCALE: " + transform.localScale);
-        moveSpeed -= sizeIncrease;
-        size += sizeIncrease;
-        stretchSize += sizeIncrease*2;
+        if(!dead){
+            playerAnims.SetTrigger("GainMass");
+            Debug.Log("size increase by: " + sizeIncrease);
+            transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
+            Debug.Log("LOCAL SCALE: " + transform.localScale);
+            moveSpeed -= sizeIncrease;
+            size += sizeIncrease;
+            stretchSize += sizeIncrease*2;
+        }
+        
     }
 }
