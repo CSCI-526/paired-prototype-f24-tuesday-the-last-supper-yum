@@ -4224,8 +4224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85b78c50b65954049a694ba3e2e0f33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: 0
-  goalSize: 1
+  currentLevel: 3
+  goalSize: 3
   player: {fileID: 0}
 --- !u!4 &2022556823
 Transform:
