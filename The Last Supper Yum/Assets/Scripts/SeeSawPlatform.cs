@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SeeSawPlatform : MonoBehaviour
 {
-    public float rotationSpeed = 3f;    
-    public float maxRotationAngle = 30f;  
-    public float weightFactor = 1f;   
-    public float edgeDampingFactor = 0.7f;
+    public float weightFactor = 1f;    // Factor to determine how much weight affects rotation
+    public float maxRotationAngle = 30f;  // Maximum angle the platform can tilt
+    public float smoothness = 2f;     // How smoothly the platform tilts
 
     private HingeJoint2D hingeJoint;
     private bool playerOnPlatform = false;
@@ -16,7 +13,6 @@ public class SeeSawPlatform : MonoBehaviour
 
     void Start()
     {
-        
         hingeJoint = GetComponent<HingeJoint2D>();
     }
 
@@ -38,36 +34,25 @@ public class SeeSawPlatform : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if (playerOnPlatform)
+        if (playerOnPlatform && player != null)
         {
-            float playerPositionX = player.position.x - transform.position.x;
-            
-            float distanceFromCenter = Mathf.Abs(playerPositionX);
-            
-            float rotationAmount = -playerPositionX * playerController.size * weightFactor;
+            // Calculate the player's horizontal offset from the center of the platform
+            float playerOffset = player.position.x - transform.position.x;
 
-            float damping = 1f - Mathf.Clamp01(distanceFromCenter / maxRotationAngle) * edgeDampingFactor;
-            rotationAmount *= damping;
+            // Calculate how much the platform should rotate based on the player's position and weight
+            float targetRotation = Mathf.Clamp(playerOffset * playerController.size * weightFactor, -maxRotationAngle, maxRotationAngle);
 
-   
-            rotationAmount = Mathf.Clamp(rotationAmount, -maxRotationAngle, maxRotationAngle);
-
-           
-            hingeJoint.transform.rotation = Quaternion.Lerp(
-                hingeJoint.transform.rotation,
-                Quaternion.Euler(0, 0, rotationAmount),
-                Time.deltaTime * rotationSpeed
-            );
+            // Smoothly rotate the platform
+            float newRotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, targetRotation, Time.fixedDeltaTime * smoothness);
+            transform.rotation = Quaternion.Euler(0, 0, newRotation);
         }
         else
         {
-            hingeJoint.transform.rotation = Quaternion.Lerp(
-                hingeJoint.transform.rotation,
-                Quaternion.identity, 
-                Time.deltaTime * (rotationSpeed / 2)
-            );
+            // Reset the platform back to its neutral position when no player is on it
+            float newRotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, 0, Time.fixedDeltaTime * (smoothness / 2));
+            transform.rotation = Quaternion.Euler(0, 0, newRotation);
         }
     }
 }
