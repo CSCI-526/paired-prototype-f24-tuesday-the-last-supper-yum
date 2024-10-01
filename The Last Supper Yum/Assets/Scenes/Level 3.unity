@@ -4224,9 +4224,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85b78c50b65954049a694ba3e2e0f33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: 3
-  goalSize: 3
-  player: {fileID: 1675239433048992611}
+  currentLevel: 0
+  goalSize: 1
+  player: {fileID: 0}
 --- !u!4 &2022556823
 Transform:
   m_ObjectHideFlags: 0
@@ -4547,17 +4547,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb7d80c26e965d4439e7e8bbbc28125d, type: 3}
---- !u!114 &1675239433048992611 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3078294179067760808, guid: cb7d80c26e965d4439e7e8bbbc28125d, type: 3}
-  m_PrefabInstance: {fileID: 1675239433048992610}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb63fbc9501df84cb558870fa74b087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2692578988555714173
 PrefabInstance:
   m_ObjectHideFlags: 0
