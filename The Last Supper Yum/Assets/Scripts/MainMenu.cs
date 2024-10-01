@@ -50,7 +50,7 @@ public class MainMenu : MonoBehaviour
     }
     public void Level5()
     {
-        SceneManager.LoadScene("Level 5");
+        SceneManager.LoadScene("LevelScene");
     }
 
     public void QuitGame()
