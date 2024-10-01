@@ -292,24 +292,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.CompareTag("Ground"))
+         if (collision.collider.gameObject.CompareTag("Ground"))
         {
-            //check the name of the platform
-            platform = collision.gameObject.name;
-            Debug.Log("Player has landed on " + platform);
-            if (platform == "BreakingPlatform")
-            {
-                if (size > 5)
-                {
-                    Destroy(collision.gameObject);
-                }
-            }
             isGrounded = true;
-            jumped = false;
             baseHight = transform.position.y;
-            // Debug.Log("starting height: " + baseHight);
-            // Debug.Log("height difference: " + Math.Abs(hight - baseHight));
-            // Debug.Log("take damge if its greater than: " + (size * 1.5f));
+            Debug.Log("starting height: " + baseHight);
+            Debug.Log("height difference: " + Math.Abs(hight - baseHight));
+            Debug.Log("take damge if its greater than: " + (size * 1.5f));
             if (Math.Abs(hight - baseHight) > (size * 1.5f) && !(inverse == true && resizeDirection == "y"))
             {
                 ShrinkPlayer(Math.Abs(hight - baseHight) * 0.5f);
@@ -326,7 +315,7 @@ public class PlayerController : MonoBehaviour
                 // the object stays in place
                 objectRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             }
-        }
+        } 
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -341,7 +330,7 @@ public class PlayerController : MonoBehaviour
 
     void ShrinkPlayer(float sizeDecrease)
     {
-        // Debug.Log("Decreasing body mass by " + sizeDecrease);
+        Debug.Log("Decreasing body mass by " + sizeDecrease);
         // Ensure the player doesn't shrink below zero
         if (transform.localScale.x - sizeDecrease <= 0 || transform.localScale.y - sizeDecrease <= 0)
         {
