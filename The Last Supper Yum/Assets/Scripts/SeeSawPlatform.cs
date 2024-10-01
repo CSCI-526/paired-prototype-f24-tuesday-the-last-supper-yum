@@ -39,7 +39,7 @@ public class SeeSawPlatform : MonoBehaviour
         if (playerOnPlatform && player != null)
         {
             float playerOffset = player.position.x - transform.position.x;
-            float targetRotation = Mathf.Clamp(playerOffset * playerController.weight * weightFactor, -maxRotationAngle, maxRotationAngle);
+            float targetRotation = Mathf.Clamp(playerOffset * playerController.size * weightFactor, -maxRotationAngle, maxRotationAngle);
             float newRotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, targetRotation, Time.fixedDeltaTime * smoothness);
             transform.rotation = Quaternion.Euler(0, 0, newRotation);
         }
