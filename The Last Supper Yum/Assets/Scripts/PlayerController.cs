@@ -304,7 +304,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("take damge if its greater than: " + (size * 1.9f));
             if (Math.Abs(hight - baseHight) > (size * 1.9f) && !(inverse == true && resizeDirection == "y"))
             {
-                ShrinkPlayer(Math.Abs(hight - baseHight) * (size/Math.Abs(hight - baseHight)) * 0.8f);
+                ShrinkPlayer(Math.Abs(hight - baseHight) * (size/Math.Abs(hight - baseHight)) * 0.3f);
             }
             hight = baseHight;
             Debug.Log("Highest Height set to: " + hight);
