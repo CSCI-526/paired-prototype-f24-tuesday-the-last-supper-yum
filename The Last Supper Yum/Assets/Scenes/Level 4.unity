@@ -4206,7 +4206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentLevel: 4
-  goalSize: 2
+  goalSize: 1.5
   player: {fileID: 1675239433048992611}
 --- !u!4 &2022556823
 Transform:
