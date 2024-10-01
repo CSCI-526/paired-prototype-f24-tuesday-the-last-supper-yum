@@ -184,9 +184,10 @@ MonoBehaviour:
   hight: 0
   baseHight: 0
   inverse: 0
-  size: 0.7
+  stretchSize: 1.2
   resizeDirection: 
   speedMult: 2
+  size: 1
 --- !u!95 &6398360757788935299
 Animator:
   serializedVersion: 5

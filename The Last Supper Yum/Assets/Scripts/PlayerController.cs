@@ -25,12 +25,13 @@ public class PlayerController : MonoBehaviour
     public float baseHight = 0f;
 
     public bool inverse = false;
-    public float size = 1.2f;
+    public float stretchSize = 1.2f;
     public string resizeDirection = "";
     public float speedMult = 5f;
     private float stretchedAmount = 0f;
-    private float baseSize = 1f;
+    public float size = 1f;
     private bool dead = false;
+    private bool jumped = false;
 
     enum MoveMode
     {
@@ -50,18 +51,6 @@ public class PlayerController : MonoBehaviour
         hight = transform.position.y;
         baseHight = transform.position.y;
     }
-
-    /*void FixedUpdate()
-    {
-       
-        float move = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-        transform.Translate(move, 0, 0);
-
-        if (transform.position.y < fallThreshold)
-        {
-            PlayerDies();
-        }
-    }*/
 
     void FixedUpdate()
     {
@@ -88,13 +77,14 @@ public class PlayerController : MonoBehaviour
         }
 
         // vertical movement
-        else if (Input.GetAxis("Vertical") == 1)
+        if (Input.GetAxis("Vertical") == 1)
         {
-            if (moveMode == MoveMode.idle && isGrounded)
+            if (moveMode == MoveMode.idle && (isGrounded || !jumped))
             {
                 resizeDirection = "y";
                 inverse = false;
                 moveMode = MoveMode.stretch;
+                jumped = true;
             }
         }
         else if (Input.GetAxis("Vertical") == -1)
@@ -145,30 +135,51 @@ public class PlayerController : MonoBehaviour
     // Source: https://pastebin.com/4VsCvrs7 
     void Stretch(float amount, string direction)
     {
-        if (stretchedAmount < size)
+        //Debug.Log("STRETCH: " + direction);
+        if (stretchedAmount < stretchSize)
         {
             if (direction == "x" && inverse == false)
             {
                 transform.position = new Vector2(transform.position.x + (amount / 2), transform.position.y);
                 transform.localScale = new Vector2(transform.localScale.x + amount, transform.localScale.y);
+                /*if (transform.localScale.y > 0.2f)
+                {
+                    transform.position = new Vector2(transform.position.x, transform.position.y - (amount / 2));
+                    transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y - amount);
+                }*/
             }
 
             if (direction == "y" && inverse == false)
             {
                 transform.position = new Vector2(transform.position.x, transform.position.y + (amount / 2));
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y + amount);
+                /*if (transform.localScale.x > 0.2f)
+                {
+                    transform.position = new Vector2(transform.position.x - (amount / 2), transform.position.y);
+                    transform.localScale = new Vector2(transform.localScale.x - amount, transform.localScale.y);
+                }*/                  
             }
 
             if (direction == "x" && inverse == true)
             {
                 transform.position = new Vector2(transform.position.x - (amount / 2), transform.position.y);
                 transform.localScale = new Vector2(transform.localScale.x + amount, transform.localScale.y);
+                /*if (transform.localScale.y > 0.2f)
+                {
+                    transform.position = new Vector2(transform.position.x, transform.position.y - (amount / 2));
+                    transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y - amount);
+                }*/
             }
 
             if (direction == "y" && inverse == true)
             {
                 transform.position = new Vector2(transform.position.x, transform.position.y - (amount / 2));
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y + amount);
+                /*if (transform.localScale.x > 0.2f)
+                {
+                    transform.position = new Vector2(transform.position.x + (amount / 2), transform.position.y);
+                    transform.localScale = new Vector2(transform.localScale.x - amount, transform.localScale.y);
+                }*/
             }
 
             stretchedAmount += amount;
@@ -178,11 +189,11 @@ public class PlayerController : MonoBehaviour
             moveMode = MoveMode.shrink;
             if (direction == "y")
             {
-                transform.localScale = new Vector2(baseSize, baseSize + size);
+                transform.localScale = new Vector2(size, size + stretchSize);
             }
             else if (direction == "x")
             {
-                transform.localScale = new Vector2(baseSize + size, baseSize);
+                transform.localScale = new Vector2(size + stretchSize, size);
             }
         }
     }
@@ -196,22 +207,42 @@ public class PlayerController : MonoBehaviour
             {
                 transform.position = new Vector2(transform.position.x + (amount / 2), transform.position.y);
                 transform.localScale = new Vector2(transform.localScale.x - amount, transform.localScale.y);
+                if(transform.localScale.y > size)
+                {
+                    //transform.position = new Vector2(transform.position.x, transform.position.y - (amount / 2));
+                    transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y - amount);
+                }
             }
             if (direction == "y" && inverse == false)
             {
-                transform.position = new Vector2(transform.position.x, transform.position.y + (amount / 2));
+                transform.position = new Vector2(transform.position.x, transform.position.y + (amount));
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y - amount);
+                if (transform.localScale.x > size)
+                {
+                    //transform.position = new Vector2(transform.position.x - (amount / 2), transform.position.y);
+                    transform.localScale = new Vector2(transform.localScale.x - amount, transform.localScale.y);
+                }
             }
 
             if (direction == "x" && inverse == true)
             {
                 transform.position = new Vector2(transform.position.x - (amount / 2), transform.position.y);
                 transform.localScale = new Vector2(transform.localScale.x - amount, transform.localScale.y);
+                if (transform.localScale.y > size)
+                {
+                    //transform.position = new Vector2(transform.position.x, transform.position.y + (amount / 2));
+                    transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y - amount);
+                }
             }
             if (direction == "y" && inverse == true)
             {
                 transform.position = new Vector2(transform.position.x, transform.position.y - (amount / 2));
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y - amount);
+                if (transform.localScale.x > size)
+                {
+                    //transform.position = new Vector2(transform.position.x + (amount / 2), transform.position.y);
+                    transform.localScale = new Vector2(transform.localScale.x - amount, transform.localScale.y);
+                }
             }
             stretchedAmount -= amount;
         }
@@ -219,7 +250,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.gravityScale = 1;
             moveMode = MoveMode.idle;
-            transform.localScale = new Vector2(baseSize, baseSize);
+            transform.localScale = new Vector2(size, size);
         }
     }
 
@@ -249,7 +280,6 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log(" Collision " + collision.gameObject.name);
                 GrowPlayer(enemySize / size);
-                size += enemySize;
                 Destroy(collision.gameObject);
             }
             else
@@ -275,6 +305,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
             isGrounded = true;
+            jumped = false;
             baseHight = transform.position.y;
             Debug.Log("starting height: " + baseHight);
             Debug.Log("height difference: " + Math.Abs(hight - baseHight));
@@ -340,6 +371,7 @@ public class PlayerController : MonoBehaviour
         transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
         Debug.Log("LOCAL SCALE: " + transform.localScale);
         moveSpeed -= sizeIncrease;
-        baseSize += sizeIncrease;
+        size += sizeIncrease;
+        stretchSize += sizeIncrease*2;
     }
 }
