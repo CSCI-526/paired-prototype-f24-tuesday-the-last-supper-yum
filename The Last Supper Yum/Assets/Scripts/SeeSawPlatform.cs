@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SeeSawPlatform : MonoBehaviour
 {
-    public float weightFactor = 1f;  
+    public float Weight = 1f;  
     public float maxRotationAngle = 30f;
     public float smoothness = 2f;    
 
@@ -39,7 +39,7 @@ public class SeeSawPlatform : MonoBehaviour
         if (playerOnPlatform && player != null)
         {
             float playerOffset = player.position.x - transform.position.x;
-            float targetRotation = Mathf.Clamp(playerOffset * playerController.size * weightFactor, -maxRotationAngle, maxRotationAngle);
+            float targetRotation = Mathf.Clamp(playerOffset * playerController.size * Weight, -maxRotationAngle, maxRotationAngle);
             float newRotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, targetRotation, Time.fixedDeltaTime * smoothness);
             transform.rotation = Quaternion.Euler(0, 0, newRotation);
         }
