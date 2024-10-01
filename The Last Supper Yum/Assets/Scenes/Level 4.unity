@@ -1500,12 +1500,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1487016728488468923, guid: e4ddbc8c1beb2b649b68873faebcfefa, type: 3}
+      propertyPath: m_Anchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487016728488468923, guid: e4ddbc8c1beb2b649b68873faebcfefa, type: 3}
+      propertyPath: m_Anchor.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487016728488468923, guid: e4ddbc8c1beb2b649b68873faebcfefa, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 40.501442
       objectReference: {fileID: 0}
     - target: {fileID: 1487016728488468923, guid: e4ddbc8c1beb2b649b68873faebcfefa, type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: 0.65
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 1487016728488468923, guid: e4ddbc8c1beb2b649b68873faebcfefa, type: 3}
       propertyPath: m_AngleLimits.m_LowerAngle
