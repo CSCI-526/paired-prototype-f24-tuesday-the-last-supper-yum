@@ -40,6 +40,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
+    }
+
     public void QuitGame()
     {
 #if UNITY_STANDALONE

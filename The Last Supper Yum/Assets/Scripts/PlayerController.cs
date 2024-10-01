@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     public float size = 1f;
     private bool dead = false;
     private bool jumped = false;
+    private string cantStretchDir;
 
     enum MoveMode
     {
@@ -129,7 +130,7 @@ public class PlayerController : MonoBehaviour
             {
                 highPt = true;
                 hight = transform.position.y;
-                Debug.Log("highest height VELOCITY: " + hight);
+                //Debug.Log("highest height VELOCITY: " + hight);
             }
         }
 
@@ -259,7 +260,7 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerDies()
     {
-        Debug.Log("PlayerDies called");
+        //Debug.Log("PlayerDies called");
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
         playerAnims.SetTrigger("Dead");
@@ -270,7 +271,7 @@ public class PlayerController : MonoBehaviour
     public void PlayerDestroyed()
     {
         Destroy(gameObject);
-        Debug.Log("PlayerDestroyed called");
+        //Debug.Log("PlayerDestroyed called");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -281,13 +282,13 @@ public class PlayerController : MonoBehaviour
             float enemySize = collision.gameObject.GetComponent<EnemyMovement>().size;
             if (size > enemySize)
             {
-                Debug.Log(" Collision " + collision.gameObject.name);
+                //Debug.Log(" Collision " + collision.gameObject.name);
                 GrowPlayer(enemySize / size);
                 Destroy(collision.gameObject);
             }
             else
             {
-                Debug.Log("Die ");
+                //Debug.Log("Die ");
                 PlayerDies();
             }
         }
@@ -299,35 +300,60 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             baseHight = transform.position.y;
-            Debug.Log("starting height: " + baseHight);
-            Debug.Log("height difference: " + Math.Abs(hight - baseHight));
-            Debug.Log("take damge if its greater than: " + (size * 1.9f));
+            //Debug.Log("starting height: " + baseHight);
+            //Debug.Log("height difference: " + Math.Abs(hight - baseHight));
+            //Debug.Log("take damge if its greater than: " + (size * 1.9f));
             if (Math.Abs(hight - baseHight) > (size * 1.9f) && !(inverse == true && resizeDirection == "y"))
             {
                 ShrinkPlayer(Math.Abs(hight - baseHight) * (size/Math.Abs(hight - baseHight)) * 0.3f);
             }
             hight = baseHight;
-            Debug.Log("Highest Height set to: " + hight);
-        } else if (collision.collider.gameObject.CompareTag("Object"))
+            //Debug.Log("Highest Height set to: " + hight);
+        } 
+        else if (collision.collider.gameObject.CompareTag("Object"))
         {
             objectRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
             if(size > 3){
-                Debug.Log("Player pushing with object");
+                //Debug.Log("Player pushing with object");
                 // player is able to push the object
                 objectRigidbody.constraints = RigidbodyConstraints2D.None;
             } else {
-                Debug.Log("Player is too small to push object");
+                //Debug.Log("Player is too small to push object");
                 // the object stays in place
                 objectRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             }
-        } 
+        }
+        else
+        {
+            Debug.Log(collision.collider.gameObject.name);
+            if (resizeDirection == "y")
+            {
+                moveMode = MoveMode.shrink;
+            }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.CompareTag("Ground") || collision.collider.gameObject.CompareTag("Object"))
+        {
+            isGrounded = true;
+            return;
+        }
+        else
+        {
+            if (resizeDirection == "y")
+            {
+                moveMode = MoveMode.shrink;
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.collider.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("EXITED COLLISION");
+            //Debug.Log("EXITED COLLISION");
             // Debug.Log("Player left the ground");
             isGrounded = false;
             highPt = false;
@@ -338,11 +364,11 @@ public class PlayerController : MonoBehaviour
     void ShrinkPlayer(float sizeDecrease)
     {
         if(!dead){
-            Debug.Log("Decreasing body mass by " + sizeDecrease);
+            //Debug.Log("Decreasing body mass by " + sizeDecrease);
             // Ensure the player doesn't shrink below zero
             if (transform.localScale.x - sizeDecrease <= 0 || transform.localScale.y - sizeDecrease <= 0)
             {
-                Debug.Log("Died from shrinkage localscale");
+                //Debug.Log("Died from shrinkage localscale");
                 PlayerDies();
             }
             else
@@ -352,7 +378,7 @@ public class PlayerController : MonoBehaviour
                 stretchSize -= (sizeDecrease * 1.5f);
                 if (size <= 0)
                 {
-                    Debug.Log("Died from shrinkage");
+                    //Debug.Log("Died from shrinkage");
                     PlayerDies();
                 }
                 else
@@ -367,9 +393,9 @@ public class PlayerController : MonoBehaviour
     {
         if(!dead){
             playerAnims.SetTrigger("GainMass");
-            Debug.Log("size increase by: " + sizeIncrease);
+            //Debug.Log("size increase by: " + sizeIncrease);
             transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
-            Debug.Log("LOCAL SCALE: " + transform.localScale);
+            //Debug.Log("LOCAL SCALE: " + transform.localScale);
             moveSpeed -= sizeIncrease;
             size += sizeIncrease;
             stretchSize += sizeIncrease*2;
