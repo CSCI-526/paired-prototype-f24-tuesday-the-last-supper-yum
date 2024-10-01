@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
         {
             highPt = true;
             hight = transform.position.y;
-            Debug.Log("highest height: " + hight);
+            Debug.Log("highest height VELOCITY: " + hight);
         }
     }
 
@@ -303,6 +303,8 @@ public class PlayerController : MonoBehaviour
             {
                 ShrinkPlayer(Math.Abs(hight - baseHight) * 0.5f);
             }
+            hight = baseHight;
+            Debug.Log("Highest Height: " + hight);
         } else if (collision.collider.gameObject.CompareTag("Object"))
         {
             objectRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
@@ -322,9 +324,11 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.gameObject.CompareTag("Ground"))
         {
+            Debug.Log("EXITED COLLISION");
             // Debug.Log("Player left the ground");
             isGrounded = false;
             highPt = false;
+            hight = transform.position.y;
         }
     }
 
