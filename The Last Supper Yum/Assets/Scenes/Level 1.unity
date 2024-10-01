@@ -1100,7 +1100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy2 (1)
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2341,7 +2341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy (2)
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_TagString
@@ -2746,7 +2746,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy2
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3017,7 +3017,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy2 (2)
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3857,7 +3857,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_Name
-      value: Enemy (1)
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 9129346559049891001, guid: 5a45ffe16d918de438d37b943e5241f2, type: 3}
       propertyPath: m_TagString
@@ -3992,7 +3992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentLevel: 1
-  goalSize: 3
+  goalSize: 2.5
   player: {fileID: 1675239433048992611}
 --- !u!4 &2022556823
 Transform:
